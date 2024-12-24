@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GLB Hosting</title>
+    <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100%; display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script>
+        // Get the canvas element
+        const canvas = document.getElementById("renderCanvas");
+
+        // Initialize Babylon.js engine
+        const engine = new BABYLON.Engine(canvas, true);
+
+        // Create a scene
+        const scene = new BABYLON.Scene(engine);
+
+        // Add a camera to the scene
+        const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 10, BABYLON.Vector3.Zero(), scene);
+        camera.attachControl(canvas, true);
+
+        // Add a light to the scene
+        const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+
+        // Add a basic debug object (e.g., a sphere) to confirm the scene is working
+        const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 1 }, scene);
+        sphere.position.y = 1;
+
+        // Load your model
+        BABYLON.SceneLoader.Append(
+            "https://Tomb520.github.io/.glb-hosting/",
+            "TheWholeRide.glb",
+            scene,
+            function () {
+                console.log("Model loaded successfully!");
+            },
+            function (progress) {
+                console.log("Loading progress:", (progress.loaded / progress.total) * 100, "%");
+            },
+            function (error) {
+                console.error("Failed to load model:", error.message || error);
+            }
+        );
+
+        // Run the render loop
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+
+        // Resize the engine on window resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>
