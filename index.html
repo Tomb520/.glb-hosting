@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>GLB Hosting</title>
+    <title>Inspect GLB Animations in Babylon.js</title>
     <style>
         body { margin: 0; }
         canvas { width: 100%; height: 100%; display: block; }
@@ -27,20 +27,28 @@
         const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 10, BABYLON.Vector3.Zero(), scene);
         camera.attachControl(canvas, true);
 
-        // Add a light to the scene
-        const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-
-        // Add a basic debug object (e.g., a sphere) to confirm the scene is working
-        const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 1 }, scene);
-        sphere.position.y = 1;
+        // Add a hemispheric light
+        const hemisphericLight = new BABYLON.HemisphericLight("hemisphericLight", new BABYLON.Vector3(0, 1, 0), scene);
+        hemisphericLight.intensity = 0.6; // Adjust light intensity if needed
 
         // Load your model
         BABYLON.SceneLoader.Append(
             "https://Tomb520.github.io/.glb-hosting/",
             "TheWholeRide.glb",
             scene,
-            function () {
+            function (scene) {
                 console.log("Model loaded successfully!");
+
+                // List all animation groups
+                console.log("Available Animations:");
+                scene.animationGroups.forEach((animationGroup, index) => {
+                    console.log(`${index}: ${animationGroup.name}`);
+                });
+
+                // Optionally, play all animations
+                scene.animationGroups.forEach((animationGroup) => {
+                    animationGroup.play(true); // true for looping
+                });
             },
             function (progress) {
                 console.log("Loading progress:", (progress.loaded / progress.total) * 100, "%");
