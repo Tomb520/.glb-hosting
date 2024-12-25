@@ -39,6 +39,7 @@
                 scene.meshes.forEach(mesh => {
                     if (mesh.name !== "__root__") { // Avoid moving the root node
                         mesh.position.addInPlace(position);
+                        console.log(`Positioning mesh: ${mesh.name} at ${position}`);
                     }
                 });
             }, function (progress) {
@@ -61,6 +62,9 @@
         window.addEventListener("resize", function () {
             engine.resize();
         });
+
+        // Show the debug layer to inspect the scene
+        scene.debugLayer.show({ embedMode: true });
     </script>
 </body>
 </html>
