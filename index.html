@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Display Multiple GLB Files in Babylon.js</title>
+    <title>Display GLB File in Babylon.js</title>
     <style>
         body { margin: 0; }
         canvas { width: 100%; height: 100%; display: block; }
@@ -49,9 +49,8 @@
             });
         }
 
-        // Load multiple GLB files
+        // Load the NewSpinner.glb file
         loadModel("https://Tomb520.github.io/.glb-hosting/NewSpinner.glb", new BABYLON.Vector3(0, 0, 0));
-        loadModel("https://Tomb520.github.io/.glb-hosting/SpinnerHouse.glb", new BABYLON.Vector3(5, 0, 0)); // Adjust positions as needed
 
         // Run the render loop
         engine.runRenderLoop(function () {
