@@ -1,69 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Display GLB File in Babylon.js</title>
+    <meta charset="UTF-8">
+    <title>Babylon.js Model Viewer</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
     <style>
-        body { margin: 0; }
-        canvas { width: 100%; height: 100%; display: block; }
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
     </style>
 </head>
 <body>
     <canvas id="renderCanvas"></canvas>
-    <!-- Include Babylon.js -->
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <!-- Include GLTF Loader -->
-    <script src="https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.js"></script>
     <script>
         // Get the canvas element
-        const canvas = document.getElementById("renderCanvas");
+        const canvas = document.getElementById('renderCanvas');
 
-        // Initialize Babylon.js engine
+        // Create Babylon.js engine
         const engine = new BABYLON.Engine(canvas, true);
 
-        // Create a scene
-        const scene = new BABYLON.Scene(engine);
+        // Create the scene
+        const createScene = function () {
+            const scene = new BABYLON.Scene(engine);
 
-        // Add a camera to the scene
-        const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 10, BABYLON.Vector3.Zero(), scene);
-        camera.attachControl(canvas, true);
+            // Create a camera and position it
+            const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 2, BABYLON.Vector3.Zero(), scene);
+            camera.attachControl(canvas, true);
 
-        // Add a hemispheric light
-        const hemisphericLight = new BABYLON.HemisphericLight("hemisphericLight", new BABYLON.Vector3(0, 1, 0), scene);
-        hemisphericLight.intensity = 0.6;
+            // Create a light
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
 
-        // Function to load a GLB model
-        function loadModel(url, position) {
-            BABYLON.SceneLoader.Append(url, "", scene, function (scene) {
-                console.log("Model loaded:", url);
-                // Position the loaded model
-                scene.meshes.forEach(mesh => {
-                    if (mesh.name !== "__root__") { // Avoid moving the root node
-                        mesh.position.addInPlace(position);
-                        console.log(`Positioning mesh: ${mesh.name} at ${position}`);
-                    }
-                });
-            }, function (progress) {
-                console.log("Loading progress:", (progress.loaded / progress.total) * 100, "%");
-            }, function (error) {
-                console.error("Failed to load model:", error.message || error);
+            // Load the model
+            BABYLON.SceneLoader.Append("", "NewSpinner.glb", scene, function (scene) {
+                console.log("Model loaded");
             });
-        }
 
-        // Load the NewSpinner.glb file
-        loadModel("https://Tomb520.github.io/.glb-hosting/NewSpinner.glb", new BABYLON.Vector3(0, 0, 0));
+            return scene;
+        };
 
-        // Run the render loop
+        // Create the scene
+        const scene = createScene();
+
+        // Render loop
         engine.runRenderLoop(function () {
             scene.render();
         });
 
-        // Resize the engine on window resize
-        window.addEventListener("resize", function () {
+        // Resize event
+        window.addEventListener('resize', function () {
             engine.resize();
         });
-
-        // Show the debug layer to inspect the scene
-        scene.debugLayer.show({ embedMode: true });
     </script>
 </body>
 </html>
