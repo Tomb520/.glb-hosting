@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Babylon.js Model Viewer</title>
+    <title>Babylon.js Animation Sequence</title>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
     <style>
@@ -39,9 +39,31 @@
             // Create a light
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
 
-            // Load the model
+            // Load the model with animations
             BABYLON.SceneLoader.Append("", "NewSpinner.glb", scene, function (scene) {
-                console.log("Model loaded");
+                // Access the animation groups
+                const animationGroups = scene.animationGroups;
+
+                if (animationGroups.length > 0) {
+                    // Play animations in sequence
+                    let currentIndex = 0;
+
+                    const playNextAnimation = () => {
+                        if (currentIndex < animationGroups.length) {
+                            const currentAnimation = animationGroups[currentIndex];
+                            currentAnimation.play(true);
+
+                            // Set an event to play the next animation when the current one ends
+                            currentAnimation.onAnimationEndObservable.addOnce(() => {
+                                currentIndex++;
+                                playNextAnimation();
+                            });
+                        }
+                    };
+
+                    // Start the first animation
+                    playNextAnimation();
+                }
             });
 
             return scene;
