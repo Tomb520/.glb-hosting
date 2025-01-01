@@ -5,6 +5,7 @@
     <title>Babylon.js Animation Sequence</title>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="animations.js"></script> <!-- Added animations.js -->
     <style>
         html, body {
             width: 100%;
@@ -44,37 +45,15 @@
                 console.log("Model loaded");
                 window.animationGroups = scene.animationGroups;
 
-                // Log the animation groups to the console within the correct scope
+                // Log the animation groups and meshes
                 console.log('Animation Groups:', window.animationGroups);
-
-                // Log all meshes to ensure they are loaded
                 scene.meshes.forEach(mesh => {
                     console.log('Mesh:', mesh.name);
-                    mesh.isVisible = true;  // Ensure all meshes are visible
+                    mesh.isVisible = true;
                 });
 
-                // Play animations in sequence
-                if (window.animationGroups.length > 0) {
-                    let currentIndex = 0;
-
-                    const playNextAnimation = () => {
-                        if (currentIndex < window.animationGroups.length) {
-                            const currentAnimation = window.animationGroups[currentIndex];
-                            currentAnimation.play(true);
-
-                            // Set an event to play the next animation when the current one ends
-                            currentAnimation.onAnimationEndObservable.addOnce(() => {
-                                currentIndex++;
-                                playNextAnimation();
-                            });
-                        }
-                    };
-
-                    // Start the first animation
-                    playNextAnimation();
-                } else {
-                    console.log('No animation groups found.');
-                }
+                // Call setupAnimations from animations.js
+                setupAnimations(scene); 
             });
 
             return scene;
