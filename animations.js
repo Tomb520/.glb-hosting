@@ -1,15 +1,32 @@
 // animations.js
+
+// Function to set up animations
 function setupAnimations(scene) {
-    const animations = scene.animationGroups; // Get all animation groups
-    animations.forEach(animation => animation.stop()); // Stop all animations
+    const animationGroups = scene.animationGroups;
 
-    // Example: Play a specific animation by name
-    const desiredAnimation = animations.find(a => a.name === "YourActionName");
-    if (desiredAnimation) {
-        desiredAnimation.start(true); // true for loop, false for one-time play
+    // Stop all animations initially
+    animationGroups.forEach(animation => animation.stop());
+
+    // Play animations in sequence
+    if (animationGroups.length > 0) {
+        let currentIndex = 0;
+
+        const playNextAnimation = () => {
+            if (currentIndex < animationGroups.length) {
+                const currentAnimation = animationGroups[currentIndex];
+                currentAnimation.play(false); // Play once
+
+                // Play the next animation when the current one ends
+                currentAnimation.onAnimationEndObservable.addOnce(() => {
+                    currentIndex++;
+                    playNextAnimation();
+                });
+            }
+        };
+
+        // Start the first animation
+        playNextAnimation();
     } else {
-        console.error("Desired animation not found");
+        console.log('No animation groups found.');
     }
-
-    console.log("Available Animations:", animations.map(a => a.name));
 }
